@@ -10,17 +10,14 @@ const Directions = Object.freeze({
   LEFT: "left",
 });
 
-const numberOfRows = 20;
-const numberOfColumns = 41;
+const numberOfRows = 25;
+const numberOfColumns = 25;
 
 // This needs to be fine-tuned
-const minimumStepsToExit = 50;
+const minimumStepsToExit = 200;
 
 // Number of mazes to iterate through to find a valid path
 const numberOfMazesToTry = 10;
-
-// Chance out of 1.00 a dead end will contain treasure
-const treasureChance = 0.25;
 
 let mainGrid;
 let allDeadEnds;
@@ -353,78 +350,27 @@ function IsValidPathLength(entrance, exit) {
   return isPathValid;
 }
 
-function PopulateTreasure() {
-  const numberOfDeadEnds = allDeadEnds.length;
-  for (let i = 0; i < numberOfDeadEnds; i++) {
-    if (!allDeadEnds[i].isEntrance && !allDeadEnds[i].isExit) {
-      if (Math.random() < treasureChance) {
-        allDeadEnds[i].isTreasure = true;
-      }
-    }
-  }
-}
-
-function GenerateMaze() {
-  const startTime = performance.now();
-  let validMazeFound = false;
-  let count = 0;
-  while (!validMazeFound) {
-    if (count >= numberOfMazesToTry) {
-      throw new Error(
-        `${count} mazes created with no valid paths found!`
-      )
-    }
-    InitializeArrays();
-    CreateMaze();
-    FindDeadEnds();
-    try {
-      CreateEntranceAndExit();
-      validMazeFound = true;
-    } catch (error) {
-      count += 1;
-    }
-  }
-  const endTime = performance.now();
-  //console.log(`\nProcess took ${(endTime - startTime).toFixed(2)}ms to find a valid maze\n`);
-}
-
 // Main Process
-
-// Visual Maze Generation
-GenerateMaze();
-PopulateTreasure();
-ParseGrid(mainGrid);
-
-// Diagnostics
-//GetAverageTreasureCount();
-
-
-// Generates 1000 mazes and counts how many treasure instances
-// are generated in each one, Useful to see how changing the treasure
-// spawn rates affects averages on a larger scale
-function GetAverageTreasureCount() {
-  const numberOfMazesToIterateThrough = 1000;
-  const mazeTreasureCounts = [];
-
-  for (let i = 0; i < numberOfMazesToIterateThrough; i++) {
-    let treasureCount = 0;
-    GenerateMaze();
-    PopulateTreasure();
-    const numberOfDeadEnds = allDeadEnds.length;
-    for (let j = 0; j < numberOfDeadEnds; j++) {
-      if (allDeadEnds[j].isTreasure) {
-        treasureCount++;
-      }
-    }
-    mazeTreasureCounts.push(treasureCount);
+const startTime = performance.now();
+let validMazeFound = false;
+let count = 0;
+while (!validMazeFound) {
+  if (count >= numberOfMazesToTry) {
+    throw new Error(
+      `${count} mazes created with no valid paths found!`
+    )
   }
-
-  let counts = mazeTreasureCounts.reduce((acc, curr) => {
-    acc[curr] = (acc[curr] || 0) +1;
-    return acc;
-  }, {});
-
-  console.log(`\nChance any given dead end will contain treasure: ${treasureChance}/1.00\n`);
-  console.log("Number of treasure items in each map:");
-  console.log(counts);
+  InitializeArrays();
+  CreateMaze();
+  FindDeadEnds();
+  try {
+    CreateEntranceAndExit();
+    validMazeFound = true;
+  } catch (error) {
+    count += 1;
+  }
 }
+const endTime = performance.now();
+
+ParseGrid(mainGrid);
+console.log(`\nProcess took ${(endTime - startTime).toFixed(2)}ms to find a valid maze\n`);

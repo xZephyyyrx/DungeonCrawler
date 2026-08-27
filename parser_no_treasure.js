@@ -8,7 +8,6 @@ export default function ParseGrid(grid) {
   const floorColor = "\x1b[30m";
   const entranceColor = "\x1b[0m";
   const exitColor = "\x1b[0m";
-  const treasureColor = "\x1b[33m";
 
   const gridRows = grid.length;
   const gridColumns = grid[0].length;
@@ -21,9 +20,9 @@ export default function ParseGrid(grid) {
       } else if (grid[y][x].isExit) {
         string += exitColor;
         string += block;
-      } else if (grid[y][x].isTreasure) {
-        string += treasureColor;
-        string += "$";
+      } else if (grid[y][x].isDeadEnd) {
+        string += floorColor;
+        string += block;
       } else if (grid[y][x].isWall) {
           string += wallColor
           string += block;
