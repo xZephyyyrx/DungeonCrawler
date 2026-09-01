@@ -6,6 +6,5 @@ export default class Tile {
     this.isDeadEnd = isDeadEnd;
     this.isEntrance = false;
     this.isExit = false;
-    this.isTreasure = false;
   }
 }
