@@ -1,14 +1,27 @@
 import MapGenerator from './map_generator.js';
-
-// Temporary Parser function to visualize changes
-import ParseGrid from './old_version/parser.js';
+import View from './view.js';
+import Game from './game.js';
 
 const generator = new MapGenerator();
+const view = new View();
 
 // Defines the size of the map
-const numberOfRows = 10;
-const numberOfColumns = 10;
+const numberOfRows = 20;
+const numberOfColumns = 20;
 
+// Generates the maze
 const gameboard = generator.generateMaze(numberOfRows, numberOfColumns);
 
-ParseGrid(gameboard);
+// Starts the basic game
+const currentGame = new Game(gameboard);
+
+// Output rendering
+console.clear();
+view.renderMap(gameboard);
+view.renderPlayer(currentGame.getPlayerPos());
+view.hideCursor();
+
+// Temporary placeholder gameloop to prevent process
+// ending abruptly
+while (numberOfRows > 0) {}
+

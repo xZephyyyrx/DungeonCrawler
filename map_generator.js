@@ -60,7 +60,7 @@ export default class MapGenerator {
 
       // Attempts to mark one dead end tile as the entrance
       // and another as the exit. The entrance and exit will
-      // only be created if the minimum steps between the 
+      // only be created if the shortest path between the 
       // two are greater or equal to the #minimumStepsToExit value
       // If no valid path can be found a new grid will be generated
       // and tested for a valid entrance and exit
@@ -265,7 +265,7 @@ export default class MapGenerator {
     node.possiblePaths.splice(index, 1);
   }
 
-  // Removes walls from the main grid both at the node's position,
+  // Removes walls from the main grid both at the new node's position,
   // and the tile approaching it based on the given direction
   createPathOnMainGrid(grid, node, direction) {
     const gridX = this.convertToFullGridDimensions(node.x);
