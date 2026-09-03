@@ -21,6 +21,20 @@ export default class View {
     WHITE: "\x1b[97m"
   });
 
+  // Clears the terminal and hides the cursor from view
+  prepareView() {
+    console.clear();
+    process.stdout.write("\x1b[?25l");
+  }
+
+  // Clean up function to make the terminal cursor visible again
+  // Called when the game loop has concluded
+  closeView() {
+    process.stdout.write("\x1b[?25h");
+  }
+
+  // Renders the map as a series of block characters denoting the 
+  // maze walls
   renderMap(grid) {
     // Block char for rendering walls
     const blockChar = "█";
@@ -59,6 +73,7 @@ export default class View {
     }
   }
 
+  // Renders the player
   renderPlayer(pos) {
     // Saves the terminal cursor position
     process.stdout.write("\x1b7");
@@ -73,6 +88,25 @@ export default class View {
     process.stdout.write("\x1b8")
   }
 
+  // Used to clear the player from the view and redraw
+  // the tile they were standing on. Called whenever a 
+  // directional input is made by the player
+  clearPlayerTile(pos) {
+    const blockChar = "█";
+    const floorColor = this.#colors.DBLACK;
+
+    process.stdout.write("\x1b7");
+
+    process.stdout.write(`\x1b[${pos.y + 1};${pos.x + 1}H`);
+
+    process.stdout.write(floorColor);
+
+    process.stdout.write(blockChar);
+
+    process.stdout.write("\x1b8");
+  }
+
+  // Hides the terminal's flashing cursor for MAXIMUM immersion
   hideCursor() {
     process.stdout.write("\x1b[?25l");
   }
